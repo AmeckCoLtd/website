@@ -1,235 +1,89 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ameck Co. Ltd - Professional Stationery & Printing Services</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <title>Ameck Company Ltd - Invoice Generator</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f4f4;
-      color: #222;
-    }
-    .header {
-      background: linear-gradient(to right, #003366, #0055a5);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-    }
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 1rem;
-      margin: 0;
-      padding: 0;
-    }
-    .navbar a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .hero {
-      background-color: #002244;
-      color: white;
-      text-align: center;
-      padding: 3rem 1rem;
-    }
-    section {
-      padding: 2rem;
-    }
-    h2 {
-      color: #ff6600;
-    }
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-    .gallery-grid img {
-      width: 100%;
-      border-radius: 10px;
-    }
-    form input, form textarea, form button {
-      display: block;
-      width: 100%;
-      margin-bottom: 1rem;
-      padding: 0.75rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    form button {
-      background-color: #ff6600;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .whatsapp-float {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-    }
-    .whatsapp-float img {
-      width: 100%;
-    }
-    .invoice-form {
-      background-color: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+    header { text-align: center; margin-bottom: 20px; }
+    .invoice-type { float: right; }
+    .company-info { margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    .actions { margin-top: 20px; }
   </style>
-  <script>
-    function generateInvoice() {
-      const client = document.getElementById('clientName').value;
-      const amount = document.getElementById('amount').value;
-      const description = document.getElementById('description').value;
-      const date = new Date().toLocaleDateString();
-      const invoiceHTML = `
-        <h3>Invoice</h3>
-        <p><strong>Date:</strong> ${date}</p>
-        <p><strong>Client:</strong> ${client}</p>
-        <p><strong>Description:</strong> ${description}</p>
-        <p><strong>Amount:</strong> TZS ${amount}</p>
-        <button onclick="downloadPDF('${client}', '${description}', '${amount}', '${date}')">Download PDF</button>
-        <button onclick="emailInvoice('${client}', '${description}', '${amount}', '${date}')">Email Invoice</button>
-      `;
-      document.getElementById('invoiceOutput').innerHTML = invoiceHTML;
-    }
-
-    function downloadPDF(client, description, amount, date) {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.setFontSize(12);
-      doc.text("INVOICE", 105, 20, { align: "center" });
-      doc.text(`Date: ${date}`, 20, 40);
-      doc.text(`Client: ${client}`, 20, 50);
-      doc.text(`Description: ${description}`, 20, 60);
-      doc.text(`Amount: TZS ${amount}`, 20, 70);
-      doc.save(`Invoice-${client}.pdf`);
-    }
-
-    function emailInvoice(client, description, amount, date) {
-      alert(`Emailing invoices requires backend setup. This is a placeholder.`);
-    }
-  </script>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="logo">
-      <!-- Replace with Ameck Co. Ltd logo image -->
-      <img src="ameck-logo.png" alt="Ameck Co. Ltd Logo" height="40" />
-    </div>
-    <nav class="navbar">
-      <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About Us</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#gallery">Gallery</a></li>
-        <li><a href="#testimonials">Testimonials</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="#invoice">Invoice</a></li>
-        <li><a href="#login">Login</a></li>
-      </ul>
-    </nav>
+  <header>
+    <img src="ameck-logo.png" alt="Ameck Logo" style="width: 120px;"><br>
+    <strong>AMECK COMPANY LIMITED</strong><br>
+    Main Office: Kahama, Shinyanga – P.O. Box 477<br>
+    Branches: Tabora Town, Dar es Salaam<br>
+    Services: Civil & Building Supplies, Stationery & Computer Consumables, Printing Services<br>
+    Phone: 0760 227 650 / 0744 426 972
   </header>
 
-  <!-- Hero Section -->
-  <section id="home" class="hero">
-    <h1>Welcome to Ameck Co. Ltd</h1>
-    <p>Your trusted partner for stationery, printing, video production, and branding solutions in Tanzania.</p>
-  </section>
+  <div class="invoice-type">
+    <label for="docType">Document Type:</label>
+    <select id="docType">
+      <option value="proforma">Proforma Invoice</option>
+      <option value="tax">Tax Invoice</option>
+      <option value="delivery">Delivery Note</option>
+    </select>
+  </div>
 
-  <!-- About Us -->
-  <section id="about">
-    <h2>About Ameck Co. Ltd</h2>
-    <p>
-      Ameck Co. Ltd is a leading company in Tabora, Tanzania, offering a wide range of services including stationery supplies, printing (typing & photocopy), video production, and graphic design. Our expertise extends to branding solutions such as logo design, company profiles, flyers, banners, and much more.
-    </p>
-  </section>
+  <div class="company-info">
+    <label>Client Name: <input type="text" id="clientName" /></label><br><br>
+    <label>Description: <input type="text" id="description" /></label><br><br>
+    <label>Amount (TZS): <input type="number" id="amount" /></label>
+  </div>
 
-  <!-- Services / Products -->
-  <section id="services">
-    <h2>Our Services</h2>
-    <ul>
-      <li>General Supply: Stationery materials & computer consumables</li>
-      <li>Stationery Activities: Printing, typing & photocopy</li>
-      <li>Video Production & Graphics Design</li>
-      <li>Identity Package: Logo design, T-shirt printing, business cards, brochures, PVC/ID cards, calendar design</li>
-      <li>Branding: Stickers, lightbox banners, roll-up banners, signage, cups printing</li>
-      <li>Covers & Cards: Social media covers, event cards, birthday & wedding invitations</li>
-      <li>Books & Pamphlets: Menus, catalogs, tickets, receipts books</li>
-      <li>Photography & Arts: Frame pictures, 3D cartoon arts, digital paintings</li>
-    </ul>
-  </section>
+  <div id="invoiceOutput">
+    <!-- Generated invoice will appear here -->
+  </div>
 
-  <!-- Gallery -->
-  <section id="gallery">
-    <h2>Gallery</h2>
-    <div class="gallery-grid">
-      <img src="gallery1.jpg" alt="Stationery products" />
-      <img src="gallery2.jpg" alt="Video production setup" />
-      <!-- Add more images as needed -->
-    </div>
-  </section>
+  <div class="actions">
+    <button onclick="generateInvoice()">Generate Invoice</button>
+    <button onclick="downloadPDF()">Download as PDF</button>
+  </div>
 
-  <!-- Testimonials -->
-  <section id="testimonials">
-    <h2>Testimonials</h2>
-    <blockquote>"Excellent service and quality products. Highly recommend Ameck Co. Ltd!" – Happy Client</blockquote>
-  </section>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    function generateInvoice() {
+      const client = document.getElementById("clientName").value;
+      const desc = document.getElementById("description").value;
+      const amt = document.getElementById("amount").value;
+      const type = document.getElementById("docType").value;
+      const title = {
+        proforma: "Proforma Invoice",
+        tax: "Tax Invoice",
+        delivery: "Delivery Note"
+      }[type];
 
-  <!-- Contact -->
-  <section id="contact">
-    <h2>Contact Us</h2>
-    <form>
-      <input type="text" placeholder="Name" required />
-      <input type="email" placeholder="Email" required />
-      <textarea placeholder="Message" required></textarea>
-      <button type="submit">Send</button>
-    </form>
-    <div class="map">
-      <!-- Location: Tabora, Tanzania -->
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3991.234098471765!2d32.68000451475717!3d-5.015236552645802!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185ed46988a45c8d%3A0xf5e33d84f3f87f7b!2sTabora!5e0!3m2!1sen!2stz!4v1690545123456!5m2!1sen!2stz"
-        width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-    </div>
-    <p><strong>Address:</strong> Tabora, Tanzania</p>
-    <p><strong>Email:</strong> AmeckLtdTanzania@hotmail.com</p>
-    <p><strong>Phone:</strong> +255 744 426972</p>
-  </section>
+      const html = \`
+        <h2>\${title}</h2>
+        <table>
+          <tr><th>Client Name</th><td>\${client}</td></tr>
+          <tr><th>Description</th><td>\${desc}</td></tr>
+          <tr><th>Amount (TZS)</th><td>\${amt}</td></tr>
+        </table>
+      \`;
+      document.getElementById("invoiceOutput").innerHTML = html;
+    }
 
-  <!-- Invoice Generator -->
-  <section id="invoice">
-    <h2>Invoice Generator</h2>
-    <div class="invoice-form">
-      <input type="text" id="clientName" placeholder="Client Name" required />
-      <input type="text" id="description" placeholder="Service Description" required />
-      <input type="number" id="amount" placeholder="Amount (TZS)" required />
-      <button onclick="generateInvoice()">Generate Invoice</button>
-      <div id="invoiceOutput" style="margin-top: 2rem;"></div>
-    </div>
-  </section>
-
-  <!-- Login -->
-  <section id="login">
-    <h2>User Login</h2>
-    <form>
-      <input type="text" placeholder="Username" required />
-      <input type="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
-  </section>
-
-  <!-- WhatsApp Chat Button -->
-  <a href="https://wa.me/255744426972" class="whatsapp-float" target="_blank" title="Chat with Ameck on WhatsApp">
-    <img src="whatsapp-icon.png" alt="Chat on WhatsApp" />
-  </a>
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.html(document.body, {
+        callback: function (pdf) {
+          pdf.save("invoice.pdf");
+        },
+        x: 10,
+        y: 10
+      });
+    }
+  </script>
 </body>
 </html>
